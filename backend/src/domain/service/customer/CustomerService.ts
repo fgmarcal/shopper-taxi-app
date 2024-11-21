@@ -13,10 +13,10 @@ export class CustomerService implements iCustomerService{
 
     async get(email: string): Promise<Customer | null> {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if(emailRegex.test(email)){
-            return await this.customerRepository.get(email);
+        if(!emailRegex.test(email)){
+            throw Error("email invalido");
         }
-        throw Error;
+        return await this.customerRepository.get(email);
     }
 
     async create(dto: createCustomerDto): Promise<void> {
