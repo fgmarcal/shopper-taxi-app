@@ -3,6 +3,6 @@ import { createCustomerDto } from "../../../domain/entity/customer/dto/createCus
 
 export interface ICustomerRepository{
 
-    get(email:string): Promise<Customer| null>;
+    get(email:string): Promise<Customer>;
     create(dto: createCustomerDto): Promise<void>;
 }

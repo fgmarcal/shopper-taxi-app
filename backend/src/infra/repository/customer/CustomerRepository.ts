@@ -5,17 +5,12 @@ import { prisma } from "../../prisma/Prisma";
 
 export class CustomerRepository implements ICustomerRepository{
 
-    async get(email: string): Promise<Customer | null> {
+    async get(email: string): Promise<Customer> {
         const customer = await prisma.customer.findUniqueOrThrow({
             where:{
                 email
             }
         })
-
-        if(customer == null){
-            return null;
-        }
-
         return customer;
     }
     
