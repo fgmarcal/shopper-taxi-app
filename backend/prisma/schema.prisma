@@ -13,9 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model Customer {
-  id       String          @id @unique @default(uuid())
+  email    String          @id @unique
   name     String
-  email    String          @unique
   reviews  DriverReview[]
   rides    Ride[]
 }
@@ -36,7 +35,7 @@ model DriverReview {
   rating        Int      @default(0)
   comment       String?
   customerId    String
-  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  customer      Customer @relation(fields: [customerId], references: [email], onDelete: Cascade, onUpdate: Cascade)
   driverId      Int
   driver        Driver   @relation(fields: [driverId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -52,7 +51,7 @@ model Ride {
   distance       Decimal
   duration       Int
   customerId     String
-  customer       Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  customer       Customer    @relation(fields: [customerId], references: [email], onDelete: Cascade, onUpdate: Cascade)
   driverId       Int
   driver         Driver      @relation(fields: [driverId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   value          Decimal
