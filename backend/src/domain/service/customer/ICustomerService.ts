@@ -1,7 +1,7 @@
 import { Customer } from "@prisma/client";
-import { createCustomerDto } from "../../../domain/entity/customer/dto/createCustomerDTO";
+import { createCustomerDto } from "../../entity/customer/dto/createCustomerDTO";
 
-export interface ICustomerRepository{
+export interface iCustomerService{
 
     get(email:string): Promise<Customer| null>;
     create(dto: createCustomerDto): Promise<void>;
