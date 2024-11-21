@@ -12,3 +12,63 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+model Customer {
+  id       String          @id @unique @default(uuid())
+  name     String
+  email    String          @unique
+  reviews  DriverReview[]
+  rides    Ride[]
+}
+
+model Driver {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String
+  vehicle     String
+  reviews     DriverReview[]
+  value       Decimal
+  min_km      Decimal
+  rides       Ride[]
+}
+
+model DriverReview {
+  id            String   @id @unique @default(uuid())
+  rating        Int      @default(0)
+  comment       String?
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  driverId      Int
+  driver        Driver   @relation(fields: [driverId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([customerId, driverId]) // Garante uma avaliação única por usuário para cada motorista.
+}
+
+model Ride {
+  id             String      @id @unique @default(uuid())
+  originId       String
+  origin         Origin      @relation("RideOrigin", fields: [originId], references: [id])
+  destinationId  String
+  destination    Destination @relation("RideDestination", fields: [destinationId], references: [id])
+  distance       Decimal
+  duration       Int
+  customerId     String
+  customer       Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  driverId       Int
+  driver         Driver      @relation(fields: [driverId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  value          Decimal
+  isCompleted    Boolean     @default(false)
+}
+
+model Origin {
+  id        String @id @unique @default(uuid())
+  latitude  Float
+  longitude Float
+  rides     Ride[] @relation("RideOrigin") // Relaciona-se a Ride pela mesma identificação.
+}
+
+model Destination {
+  id        String @id @unique @default(uuid())
+  latitude  Float
+  longitude Float
+  rides     Ride[] @relation("RideDestination") // Relaciona-se a Ride pela mesma identificação.
+}
