@@ -18,6 +18,13 @@ export const DRIVER_NOT_FOUND:baseError = {
     status:404
 }
 
+export const CUSTOMER_NOT_FOUND:baseError = {
+    errorCode:"CUSTOMER_NOT_FOUND",
+    errorDescription:"Cliente não encontrado",
+    status:404
+}
+
+
 export const NO_RIDES_FOUND:baseError = {
     errorCode:"NO_RIDES_FOUND",
     errorDescription:"Nenhum registro encontrado",
