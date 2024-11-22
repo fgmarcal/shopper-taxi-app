@@ -10,9 +10,9 @@ export class CustomerController {
         const customerService = new CustomerService(customerRepository);
 
         try {
-            const dto:createCustomerDto = request.body;
-            await customerService.create(dto);
-            response.status(201).json({message:"created"});
+            const customer:createCustomerDto = request.body;
+            await customerService.create(customer);
+            response.status(201).json({"success":true});
         } catch (error) {
             next(error);
         }

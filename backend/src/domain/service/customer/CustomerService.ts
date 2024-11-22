@@ -22,6 +22,9 @@ export class CustomerService implements iCustomerService{
     }
 
     async create(dto: createCustomerDto): Promise<void> {
+        if(!dto.name || !dto.email){
+            throw new InvalidDataException(INVALID_DATA);
+        }
         await this.customerRepository.create(dto);
     }
 
