@@ -1,11 +1,11 @@
 import { Customer } from "@prisma/client";
 import { createCustomerDto } from "../../entity/customer/dto/createCustomerDTO";
-import { iCustomerService } from "./ICustomerService";
+import { ICustomerService } from "./ICustomerService";
 import { ICustomerRepository } from "../../../infra/repository/customer/ICustomerRepository";
 import { InvalidDataException, NotFoundException } from "../../../exceptions/Exceptions";
 import { CUSTOMER_NOT_FOUND, INVALID_DATA } from "../../../exceptions/errorCodes";
 
-export class CustomerService implements iCustomerService{
+export class CustomerService implements ICustomerService{
 
     private customerRepository:ICustomerRepository
 
@@ -28,6 +28,10 @@ export class CustomerService implements iCustomerService{
     async create(dto: createCustomerDto): Promise<void> {
         if(!dto.name || !dto.email){
             throw new InvalidDataException(INVALID_DATA);
+        }
+        const exists = await this.customerRepository.get(dto.email);
+        if(exists){
+            throw new InvalidDataException(INVALID_DATA); 
         }
         await this.customerRepository.create(dto);
     }
