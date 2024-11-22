@@ -9,7 +9,7 @@ const driverController = new DriverController();
 driverRoutes
     .route("/driver/:id")
     .get(driverController.getDriver)
-    .put(driverController.updateDriver);
+    .patch(driverController.updateDriver);
 
 driverRoutes
     .route("/drivers")
