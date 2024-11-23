@@ -32,14 +32,44 @@ export class RideService implements IRideService{
             throw new InvalidDataException(INVALID_DATA)
         }
 
-        const route = await this.mapsService.getRoute(request);
+        const route = await this.mapsService.getRoute(request) as routeServiceResponse;
 
+        return this.createRouteReponse(route);
+    }
+    
+    //TODO
+    async confirm(confirmation: confirmRideDTO): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    //TODO
+    async get(params: getRideParamsDTO): Promise<getRideResponseDTO> {
+        throw new Error("Method not implemented.");
+    }
+
+    private async findAvailableDrivers(distanceInMeters: number): Promise<DriverEntity[]> {
+        const distance_km = distanceInMeters / 1000;
+    
+        const drivers = await this.driversService.getAll();
+    
+        const filtered = drivers.filter(driver => {
+            return Number(driver.min_km) <= distance_km;
+        });
+    
+        filtered.sort((a, b) => {
+            const priceA = Number(a.value) * distance_km;
+            const priceB = Number(b.value) * distance_km;
+            return priceA - priceB;
+        }).map((driver) => driver.value = (driver.value * distance_km));
+    
+        return filtered;
+    }
+
+    private async createRouteReponse(route:routeServiceResponse):Promise<estimateResponseDTO> {
         if (!route || (route as routeServiceResponse).status !== "OK" || (route as routeServiceResponse).routes.length === 0) {
             throw new InvalidDataException(INVALID_DATA);
         }
 
         const routeData = route as routeServiceResponse;
-
         const selectedRoute = routeData.routes[0];
         const leg = selectedRoute.legs[0];
 
@@ -73,34 +103,7 @@ export class RideService implements IRideService{
             routeResponse:routeData
         }
 
-        return response;
-    }
-    
-    //TODO
-    confirm(confirmation: confirmRideDTO): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    //TODO
-    get(params: getRideParamsDTO): Promise<getRideResponseDTO> {
-        throw new Error("Method not implemented.");
-    }
-
-    private async findAvailableDrivers(distanceInMeters: number): Promise<DriverEntity[]> {
-        const distance_km = distanceInMeters / 1000;
-    
-        const drivers = await this.driversService.getAll();
-    
-        const filtered = drivers.filter(driver => {
-            return Number(driver.min_km) <= distance_km;
-        });
-    
-        filtered.sort((a, b) => {
-            const priceA = Number(a.value) * distance_km;
-            const priceB = Number(b.value) * distance_km;
-            return priceA - priceB;
-        }).map((driver) => driver.value = (driver.value * distance_km));
-    
-        return filtered;
+        return response
     }
 
 }
