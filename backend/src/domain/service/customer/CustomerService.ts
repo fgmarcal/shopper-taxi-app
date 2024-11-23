@@ -18,19 +18,19 @@ export class CustomerService implements ICustomerService{
         if(!emailRegex.test(email)){
             throw new InvalidDataException(INVALID_DATA);
         }
-        const exists = await this.customerRepository.get(email);
-        if(exists == null){
+        const customer = await this.customerRepository.get(email);
+        if(customer == null){
             throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
-        return exists
+        return customer
     }
 
     async create(dto: createCustomerDto): Promise<void> {
         if(!dto.name || !dto.email){
             throw new InvalidDataException(INVALID_DATA);
         }
-        const exists = await this.customerRepository.get(dto.email);
-        if(exists){
+        const checkIfExists = await this.customerRepository.get(dto.email);
+        if(checkIfExists){
             throw new InvalidDataException(INVALID_DATA); 
         }
         await this.customerRepository.create(dto);
