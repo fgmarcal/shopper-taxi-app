@@ -56,7 +56,7 @@ export class RideService implements IRideService{
 
     //TODO
     async get(params: getRideParamsDTO): Promise<getRideResponseDTO> {
-        throw new Error("Method not implemented.");
+        return await this.rideRepository.get(params);
     }
 
     private async findAvailableDrivers(distanceInMeters: number): Promise<DriverEntity[]> {

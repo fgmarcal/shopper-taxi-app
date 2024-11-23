@@ -35,7 +35,7 @@ export class RideController{
     getRides = async(request: Request, response: Response, next: NextFunction) =>{
         try {
             const customer_id = request.params.customer_id;
-            const driver_id = Number(request.query.driver_id);
+            const driver_id = request.query.driver_id ? Number(request.query.driver_id) : undefined;
             const params:getRideParamsDTO = {customer_id, driver_id};
             const result = await this.rideService.get(params);
             response.status(200).json(result);

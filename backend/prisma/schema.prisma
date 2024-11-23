@@ -38,6 +38,7 @@ model DriverReview {
 
 model Ride {
   id             Int           @id @default(autoincrement())
+  createdAt      DateTime
   origin         String      
   destination    String
   distance       Float

@@ -11,9 +11,12 @@ export class CustomerRepository implements ICustomerRepository{
                 email
             },
             include:{
-                reviews:true
-            }
-        })
+                reviews:true,
+                rides:true
+            },
+        
+        });
+
         if(!customer){
             return null;
         }

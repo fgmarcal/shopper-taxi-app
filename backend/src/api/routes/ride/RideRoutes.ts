@@ -15,7 +15,7 @@ rideRoutes
     .patch(rideController.confirmRide);
 
 rideRoutes
-    .route("ride/:customer_id")
+    .route("/ride/:customer_id")
     .get(rideController.getRides);
 
 export{rideRoutes}
