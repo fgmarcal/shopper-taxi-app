@@ -7,15 +7,18 @@ import { IRideRepository } from "./IRideRepository";
 export class RideRepository implements IRideRepository{
 
     async confirm(confirmation:confirmRideDTO): Promise<void> {
+
         await prisma.ride.create({
-            data:{
-                origin:confirmation.origin,
-                destination:confirmation.destination,
-                distance:confirmation.distance,
-                
-            }
-        })
-        throw new Error("Method not implemented.");
+            data: {
+                origin: confirmation.origin,
+                destination: confirmation.destination,
+                distance: confirmation.distance,
+                duration: confirmation.duration,
+                value: confirmation.value,
+                driverId: confirmation.driver.id,
+                customerId: confirmation.customer_id,
+            },
+        });
     }
 
     async get(params: getRideParamsDTO): Promise<getRideResponseDTO> {

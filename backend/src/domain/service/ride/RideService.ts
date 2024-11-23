@@ -41,12 +41,11 @@ export class RideService implements IRideService{
         return this.createRouteReponse(route);
     }
     
-    //TODO - DOING
     async confirm(confirmation: confirmRideDTO): Promise<void> {
         if(confirmation.destination === null || confirmation.origin === null){
             throw new InvalidDataException(INVALID_DATA);
         }
-        if(!confirmation.customer_id){
+        if(confirmation.customer_id === null){
             throw new InvalidDataException(INVALID_DATA);
         }
 
@@ -62,9 +61,7 @@ export class RideService implements IRideService{
         if(realDistance < Number(driverCheck?.min_km)){
             throw new InvalidDataException(INVALID_DISTANCE);
         }
-
-
-
+        await this.rideRepository.confirm(confirmation);
     }
 
 
