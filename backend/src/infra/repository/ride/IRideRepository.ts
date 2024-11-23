@@ -1,8 +1,9 @@
-import { estimateDTO } from "../../../domain/entity/ride/dto/estimateDto";
+import { confirmRideDTO } from "../../../domain/entity/ride/dto/confirmRideDTO";
+import { getRideParamsDTO } from "../../../domain/entity/ride/dto/getRideParamsDTO";
+import { getRideResponseDTO } from "../../../domain/entity/ride/dto/getRideResponseDTO";
 
 export interface IRideRepository{
 
-    estimate(data:estimateDTO):Promise<void>;
-    confirm():Promise<void>;
-    get(params:any):Promise<void>;
+    confirm(confirmation:confirmRideDTO):Promise<void>;
+    get(params:getRideParamsDTO):Promise<getRideResponseDTO>;
 }

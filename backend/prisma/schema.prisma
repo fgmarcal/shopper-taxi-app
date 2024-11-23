@@ -37,7 +37,7 @@ model DriverReview {
 }
 
 model Ride {
-  id             String      @id @unique @default(uuid())
+  id          Int           @id @default(autoincrement())
   originId       String
   origin         Origin      @relation("RideOrigin", fields: [originId], references: [id])
   destinationId  String

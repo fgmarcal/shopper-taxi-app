@@ -1,4 +1,4 @@
-export interface IDriverReview{
+export interface createReviewDTO{
     rating:number,
     comment:string,
     customerId:string,
