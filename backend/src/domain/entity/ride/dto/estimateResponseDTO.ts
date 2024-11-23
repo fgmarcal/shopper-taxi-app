@@ -18,7 +18,7 @@ type DriverOption = {
     name:string,
     description:string
     vehicle:string,
-    review:Review,
+    review:Review["rating"],
     value:number
 }
 

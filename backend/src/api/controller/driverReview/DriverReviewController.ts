@@ -13,10 +13,7 @@ export class DriverReviewController{
     private driverReviewService:IDriverReviewService;
 
     constructor(){
-        const customerRepository: ICustomerRepository = new CustomerRepository();
-        const driverRepository: IDriverRepository = new DriverRepository();
-        const driverReviewRepository: IDriverReviewRepository = new DriverReviewRepository();
-        this.driverReviewService = new DriverReviewService(driverReviewRepository, customerRepository, driverRepository);
+        this.driverReviewService = new DriverReviewService();
     }
 
     createReview = async(request: Request, response: Response, next: NextFunction) =>{

@@ -4,13 +4,14 @@ import { ICustomerService } from "./ICustomerService";
 import { ICustomerRepository } from "../../../infra/repository/customer/ICustomerRepository";
 import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
 import { CUSTOMER_NOT_FOUND, INVALID_DATA } from "../../../application/exceptions/errorCodes";
+import { CustomerRepository } from "../../../infra/repository/customer/CustomerRepository";
 
 export class CustomerService implements ICustomerService{
 
     private customerRepository:ICustomerRepository
 
-    constructor(customerRepository:ICustomerRepository){
-        this.customerRepository = customerRepository;
+    constructor(){
+        this.customerRepository = new CustomerRepository();
     }
 
     async get(email: string): Promise<Customer> {

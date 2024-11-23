@@ -1,4 +1,5 @@
 import { estimateRequestDTO } from "../../entity/ride/dto/estimateRequestDTO";
+import { routeServiceResponse } from "../../entity/route/routeServiceResponse";
 import { IRoutesService } from "./IRoutesService";
 import dotenv from 'dotenv';
 
@@ -8,7 +9,7 @@ export class GoogleMapsRouteService implements IRoutesService{
 
     private API_KEY:string = String(process.env.GOOGLE_API_KEY);
     
-    async getRoute(request: estimateRequestDTO): Promise<object|null> {
+    async getRoute(request: estimateRequestDTO): Promise<routeServiceResponse|null> {
         const origin = this.convertAddress(request.origin);
         const destination = this.convertAddress(request.destination);
         

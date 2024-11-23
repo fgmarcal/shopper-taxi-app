@@ -5,13 +5,14 @@ import { IDriverService } from "./IDriverService";
 import { IDriverRepository } from "../../../infra/repository/driver/IDriverRepository";
 import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
 import { DRIVER_NOT_FOUND, INVALID_DATA } from "../../../application/exceptions/errorCodes";
+import { DriverRepository } from "../../../infra/repository/driver/DriverRepository";
 
 export class DriverService implements IDriverService{
 
     private driverRepository:IDriverRepository;
 
-    constructor(driverRepository:IDriverRepository){
-        this.driverRepository = driverRepository;
+    constructor(){
+        this.driverRepository = new DriverRepository();
     }
 
     async get(id: number): Promise<Driver | null> {

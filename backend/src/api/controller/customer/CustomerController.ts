@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomerRepository } from "../../../infra/repository/customer/CustomerRepository";
 import { CustomerService } from "../../../domain/service/customer/CustomerService";
 import { createCustomerDto } from "../../../domain/entity/customer/dto/createCustomerDTO";
 
@@ -7,8 +6,7 @@ export class CustomerController {
     private customerService: CustomerService;
 
     constructor() {
-        const customerRepository = new CustomerRepository();
-        this.customerService = new CustomerService(customerRepository);
+        this.customerService = new CustomerService();
     }
 
     createCustomer = async (request: Request, response: Response, next: NextFunction) => {

@@ -7,6 +7,9 @@ import { IDriverReviewRepository } from "../../../infra/repository/driverReview/
 import { createReviewDTO } from "../../entity/driverReview/dto/createReviewDTO";
 import { getReviewDTO } from "../../entity/driverReview/dto/getReviewDTO";
 import { IDriverReviewService } from "./IDriverReviewService";
+import { DriverReviewRepository } from "../../../infra/repository/driverReview/DriverReviewRepository";
+import { CustomerRepository } from "../../../infra/repository/customer/CustomerRepository";
+import { DriverRepository } from "../../../infra/repository/driver/DriverRepository";
 
 export class DriverReviewService implements IDriverReviewService{
 
@@ -14,12 +17,11 @@ export class DriverReviewService implements IDriverReviewService{
     private driverRepository:IDriverRepository;
     private customerRepository:ICustomerRepository;
 
-    constructor(driverReviewRepository:IDriverReviewRepository, 
-        customerRepository:ICustomerRepository, driverRepository:IDriverRepository){
+    constructor(){
 
-        this.driverReviewRepository = driverReviewRepository;
-        this.customerRepository = customerRepository;
-        this.driverRepository = driverRepository;
+        this.driverReviewRepository = new DriverReviewRepository();
+        this.customerRepository = new CustomerRepository();
+        this.driverRepository = new DriverRepository();
     }
 
     async create(review: createReviewDTO): Promise<void> {
