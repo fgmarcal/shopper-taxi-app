@@ -3,7 +3,6 @@ import { getRideParamsDTO } from "../../../domain/entity/ride/dto/getRideParamsD
 import { getRideResponseDTO } from "../../../domain/entity/ride/dto/getRideResponseDTO";
 
 export interface IRideRepository{
-
     confirm(confirmation:confirmRideDTO):Promise<void>;
     get(params:getRideParamsDTO):Promise<getRideResponseDTO>;
 }

@@ -1,9 +1,11 @@
-import { INVALID_DATA, NO_RIDES_FOUND } from "../../../application/exceptions/errorCodes";
-import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
+import { INVALID_DATA, INVALID_DISTANCE, INVALID_DRIVER } from "../../../application/exceptions/errorCodes";
+import { InvalidDataException } from "../../../application/exceptions/Exceptions";
+import { IRideRepository } from "../../../infra/repository/ride/IRideRepository";
+import { RideRepository } from "../../../infra/repository/ride/RideRepository";
 import { DriverEntity } from "../../entity/driver/Driver";
 import { confirmRideDTO } from "../../entity/ride/dto/confirmRideDTO";
 import { estimateRequestDTO } from "../../entity/ride/dto/estimateRequestDTO";
-import { DriverOption, estimateResponseDTO } from "../../entity/ride/dto/estimateResponseDTO";
+import { estimateResponseDTO } from "../../entity/ride/dto/estimateResponseDTO";
 import { getRideParamsDTO } from "../../entity/ride/dto/getRideParamsDTO";
 import { getRideResponseDTO } from "../../entity/ride/dto/getRideResponseDTO";
 import { routeServiceResponse } from "../../entity/route/routeServiceResponse";
@@ -17,10 +19,12 @@ export class RideService implements IRideService{
 
     private mapsService: IRoutesService;
     private driversService: IDriverService;
+    private rideRepository: IRideRepository;
 
     constructor(){
         this.mapsService = new GoogleMapsRouteService();
         this.driversService = new DriverService();
+        this.rideRepository = new RideRepository();
     }
 
     async estimate(request: estimateRequestDTO): Promise<estimateResponseDTO> {
@@ -37,10 +41,33 @@ export class RideService implements IRideService{
         return this.createRouteReponse(route);
     }
     
-    //TODO
+    //TODO - DOING
     async confirm(confirmation: confirmRideDTO): Promise<void> {
-        throw new Error("Method not implemented.");
+        if(confirmation.destination === null || confirmation.origin === null){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+        if(!confirmation.customer_id){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+
+        if(confirmation.destination === confirmation.origin){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+
+        const driverCheck = await this.driversService.get(confirmation.driver.id);
+        if(!driverCheck){
+            throw new InvalidDataException(INVALID_DRIVER);
+        }
+        const realDistance = confirmation.distance/1000;
+        if(realDistance < Number(driverCheck?.min_km)){
+            throw new InvalidDataException(INVALID_DISTANCE);
+        }
+
+
+
     }
+
+
     //TODO
     async get(params: getRideParamsDTO): Promise<getRideResponseDTO> {
         throw new Error("Method not implemented.");

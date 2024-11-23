@@ -3,7 +3,7 @@ export interface confirmRideDTO {
     origin:string,
     destination:string,
     distance:number,
-    duration:number,
+    duration:string,
     driver:Driver,
     value:number
 }

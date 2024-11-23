@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Ride" ALTER COLUMN "duration" SET DATA TYPE TEXT;

@@ -19,8 +19,8 @@ model Driver {
   description String
   vehicle     String
   reviews     DriverReview[]
-  value       Decimal
-  min_km      Decimal
+  value       Float
+  min_km      Int
   rides       Ride[]
 }
 
@@ -37,31 +37,14 @@ model DriverReview {
 }
 
 model Ride {
-  id          Int           @id @default(autoincrement())
-  originId       String
-  origin         Origin      @relation("RideOrigin", fields: [originId], references: [id])
-  destinationId  String
-  destination    Destination @relation("RideDestination", fields: [destinationId], references: [id])
-  distance       Decimal
-  duration       Int
+  id             Int           @id @default(autoincrement())
+  origin         String      
+  destination    String
+  distance       Float
+  duration       String
   customerId     String
   customer       Customer    @relation(fields: [customerId], references: [email], onDelete: Cascade, onUpdate: Cascade)
   driverId       Int
   driver         Driver      @relation(fields: [driverId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  value          Decimal
-  isCompleted    Boolean     @default(false)
-}
-
-model Origin {
-  id        String @id @unique @default(uuid())
-  latitude  Float
-  longitude Float
-  rides     Ride[] @relation("RideOrigin") // Relaciona-se a Ride pela mesma identificação.
-}
-
-model Destination {
-  id        String @id @unique @default(uuid())
-  latitude  Float
-  longitude Float
-  rides     Ride[] @relation("RideDestination") // Relaciona-se a Ride pela mesma identificação.
+  value          Float
 }
