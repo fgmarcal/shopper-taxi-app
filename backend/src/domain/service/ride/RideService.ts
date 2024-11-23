@@ -1,5 +1,5 @@
 import { INVALID_DATA, INVALID_DISTANCE, INVALID_DRIVER } from "../../../application/exceptions/errorCodes";
-import { InvalidDataException } from "../../../application/exceptions/Exceptions";
+import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
 import { IRideRepository } from "../../../infra/repository/ride/IRideRepository";
 import { RideRepository } from "../../../infra/repository/ride/RideRepository";
 import { DriverEntity } from "../../entity/driver/Driver";
@@ -54,13 +54,24 @@ export class RideService implements IRideService{
         }
 
         const driverCheck = await this.driversService.get(confirmation.driver.id);
+        
         if(!driverCheck){
             throw new InvalidDataException(INVALID_DRIVER);
         }
+
+        if(driverCheck.name !== confirmation.driver.name){
+            throw new InvalidDataException(INVALID_DRIVER);
+        }
+
         const realDistance = confirmation.distance/1000;
         if(realDistance < Number(driverCheck?.min_km)){
             throw new InvalidDataException(INVALID_DISTANCE);
         }
+
+        if(confirmation.value !== (realDistance*driverCheck.value)){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+
         await this.rideRepository.confirm(confirmation);
     }
 
