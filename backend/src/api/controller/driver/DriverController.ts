@@ -7,56 +7,50 @@ import { createDriverDto } from "../../../domain/entity/driver/dto/createDriverD
 import { updateDriverDto } from "../../../domain/entity/driver/dto/updateDriverDTO";
 
 export class DriverController {
-    
-    async getDriver(request:Request, response:Response, next:NextFunction){
-        const driverRepository:IDriverRepository = new DriverRepository();
-        const driverService:IDriverService = new DriverService(driverRepository);
+    private driverService: IDriverService;
 
+    constructor() {
+        const driverRepository: IDriverRepository = new DriverRepository();
+        this.driverService = new DriverService(driverRepository);
+    }
+
+    getDriver = async (request: Request, response: Response, next: NextFunction) => {
         try {
-            const driverId:number = Number(request.params.id);
-            const result = await driverService.get(driverId);
+            const driverId: number = Number(request.params.id);
+            const result = await this.driverService.get(driverId);
             response.status(200).json(result);
         } catch (error) {
             next(error);
         }
-    }
+    };
 
-    async getAllDrivers(request:Request, response:Response, next:NextFunction){
-        const driverRepository:IDriverRepository = new DriverRepository();
-        const driverService:IDriverService = new DriverService(driverRepository);
-
+    getAllDrivers = async (request: Request, response: Response, next: NextFunction) => {
         try {
-            const results = await driverService.getAll();
+            const results = await this.driverService.getAll();
             response.status(200).json(results);
         } catch (error) {
             next(error);
         }
-    }
+    };
 
-    async createDriver(request:Request, response:Response, next:NextFunction){
-        const driverRepository:IDriverRepository = new DriverRepository();
-        const driverService:IDriverService = new DriverService(driverRepository);
-
+    createDriver = async (request: Request, response: Response, next: NextFunction) => {
         try {
-            const driverDto:createDriverDto = request.body;
-            await driverService.create(driverDto);
-            response.status(201).json({"success":true});
+            const driverDto: createDriverDto = request.body;
+            await this.driverService.create(driverDto);
+            response.status(201).json({ success: true });
         } catch (error) {
             next(error);
         }
-    }
+    };
 
-    async updateDriver(request:Request, response:Response, next:NextFunction){
-        const driverRepository:IDriverRepository = new DriverRepository();
-        const driverService:IDriverService = new DriverService(driverRepository);
-
+    updateDriver = async (request: Request, response: Response, next: NextFunction) => {
         try {
-            const driverId:number = Number(request.params.id);
-            const updateDto:updateDriverDto = request.body;
-            await driverService.update(driverId, updateDto);
-            response.status(201).json({"success":true});
+            const driverId: number = Number(request.params.id);
+            const updateDto: updateDriverDto = request.body;
+            await this.driverService.update(driverId, updateDto);
+            response.status(201).json({ success: true });
         } catch (error) {
             next(error);
         }
-    }
+    };
 }

@@ -4,30 +4,30 @@ import { CustomerService } from "../../../domain/service/customer/CustomerServic
 import { createCustomerDto } from "../../../domain/entity/customer/dto/createCustomerDTO";
 
 export class CustomerController {
+    private customerService: CustomerService;
 
-    async createCustomer(request:Request, response:Response, next:NextFunction){
+    constructor() {
         const customerRepository = new CustomerRepository();
-        const customerService = new CustomerService(customerRepository);
+        this.customerService = new CustomerService(customerRepository);
+    }
 
+    createCustomer = async (request: Request, response: Response, next: NextFunction) => {
         try {
-            const customer:createCustomerDto = request.body;
-            await customerService.create(customer);
-            response.status(201).json({"success":true});
+            const customer: createCustomerDto = request.body;
+            await this.customerService.create(customer);
+            response.status(201).json({ success: true });
         } catch (error) {
             next(error);
         }
-    }
+    };
 
-    async getCustomer(request:Request, response:Response, next:NextFunction){
-        const customerRepository = new CustomerRepository();
-        const customerService = new CustomerService(customerRepository);
-
+    getCustomer = async (request: Request, response: Response, next: NextFunction) => {
         try {
-            const email:string = request.params.email;
-            const customer = await customerService.get(email);
+            const email: string = request.params.email;
+            const customer = await this.customerService.get(email);
             response.status(200).json(customer);
         } catch (error) {
             next(error);
         }
-    }
+    };
 }
