@@ -3,6 +3,7 @@ import { createDriverDto } from "../../../domain/entity/driver/dto/createDriverD
 import { updateDriverDto } from "../../../domain/entity/driver/dto/updateDriverDTO";
 import { IDriverRepository } from "./IDriverRepository";
 import { prisma } from "../../prisma/Prisma";
+import { DriverEntity } from "../../../domain/entity/driver/Driver";
 
 export class DriverRepository implements IDriverRepository {
 
@@ -21,11 +22,29 @@ export class DriverRepository implements IDriverRepository {
         return driver
     }
 
-    async getAll(): Promise<Driver[]> {
-        const drivers = await prisma.driver.findMany();
-        if(drivers.length === 0){
-            return [] as Driver[]
+    async getAll(): Promise<DriverEntity[]> {
+        const queryResult = await prisma.driver.findMany({
+            include:{
+                reviews:true
+            }
+        });
+        if(queryResult.length === 0){
+            return [] as DriverEntity[]
         }
+        
+        const drivers:DriverEntity[] = queryResult.map((driver)=>({
+            id:driver.id,
+            name:driver.name,
+            description:driver.description,
+            vehicle:driver.vehicle,
+            min_km:Number(driver.min_km),
+            review:driver.reviews.map((review)=>({
+                rating:review.rating,
+                comment:review.comment
+            })),
+            value:Number(driver.value)
+        }));
+
         return drivers;
     }
 
@@ -38,7 +57,7 @@ export class DriverRepository implements IDriverRepository {
                 value:dto.value,
                 vehicle:dto.vehicle
             }
-        })
+        });
     }
 
     async update(id:number, dto: updateDriverDto): Promise<void> {
@@ -53,7 +72,7 @@ export class DriverRepository implements IDriverRepository {
                 value:dto.value,
                 vehicle:dto.vehicle                
             }
-        })
+        });
     }
 
 }

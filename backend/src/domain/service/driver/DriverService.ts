@@ -6,6 +6,7 @@ import { IDriverRepository } from "../../../infra/repository/driver/IDriverRepos
 import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
 import { DRIVER_NOT_FOUND, INVALID_DATA } from "../../../application/exceptions/errorCodes";
 import { DriverRepository } from "../../../infra/repository/driver/DriverRepository";
+import { DriverEntity } from "../../entity/driver/Driver";
 
 export class DriverService implements IDriverService{
 
@@ -23,7 +24,7 @@ export class DriverService implements IDriverService{
         return driver;
     }
 
-    async getAll(): Promise<Driver[]> {
+    async getAll(): Promise<DriverEntity[]> {
         const drivers = await this.driverRepository.getAll();
         if(drivers.length === 0){
             throw new NotFoundException(DRIVER_NOT_FOUND);

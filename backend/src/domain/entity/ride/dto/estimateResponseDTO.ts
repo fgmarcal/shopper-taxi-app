@@ -13,12 +13,12 @@ type LatLong = {
     longitude:number
 }
 
-type DriverOption = {
+export type DriverOption = {
     id:number,
     name:string,
     description:string
     vehicle:string,
-    review:Review["rating"],
+    review:Review[],
     value:number
 }
 

@@ -1,8 +1,9 @@
 import { INVALID_DATA, NO_RIDES_FOUND } from "../../../application/exceptions/errorCodes";
 import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
+import { DriverEntity } from "../../entity/driver/Driver";
 import { confirmRideDTO } from "../../entity/ride/dto/confirmRideDTO";
 import { estimateRequestDTO } from "../../entity/ride/dto/estimateRequestDTO";
-import { estimateResponseDTO } from "../../entity/ride/dto/estimateResponseDTO";
+import { DriverOption, estimateResponseDTO } from "../../entity/ride/dto/estimateResponseDTO";
 import { getRideParamsDTO } from "../../entity/ride/dto/getRideParamsDTO";
 import { getRideResponseDTO } from "../../entity/ride/dto/getRideResponseDTO";
 import { routeServiceResponse } from "../../entity/route/routeServiceResponse";
@@ -55,7 +56,7 @@ export class RideService implements IRideService{
         const endAddressLat = leg.end_location.lat;
         const endAddressLong = leg.end_location.lng;
 
-        const options = this.findeAvailableDrivers(distance);
+        const options:DriverEntity[] = await this.findAvailableDrivers(distance);
 
         const response:estimateResponseDTO = {
             origin:{
@@ -75,21 +76,31 @@ export class RideService implements IRideService{
         return response;
     }
     
+    //TODO
     confirm(confirmation: confirmRideDTO): Promise<void> {
         throw new Error("Method not implemented.");
     }
+    //TODO
     get(params: getRideParamsDTO): Promise<getRideResponseDTO> {
         throw new Error("Method not implemented.");
     }
 
-    private findeAvailableDrivers(distanceInMeters:number):estimateResponseDTO["options"]{
-        //get all drivers
-        //calculate distance in km
-        //compare distance with min_km
-        //filter and calculate fare
-        //sort by final price
-        //return list of drivers
-        return []
+    private async findAvailableDrivers(distanceInMeters: number): Promise<DriverEntity[]> {
+        const distance_km = distanceInMeters / 1000;
+    
+        const drivers = await this.driversService.getAll();
+    
+        const filtered = drivers.filter(driver => {
+            return Number(driver.min_km) <= distance_km;
+        });
+    
+        filtered.sort((a, b) => {
+            const priceA = Number(a.value) * distance_km;
+            const priceB = Number(b.value) * distance_km;
+            return priceA - priceB;
+        }).map((driver) => driver.value = (driver.value * distance_km));
+    
+        return filtered;
     }
 
 }
