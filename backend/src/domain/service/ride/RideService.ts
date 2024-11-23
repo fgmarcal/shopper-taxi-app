@@ -18,12 +18,12 @@ import { IRideService } from "./IRideService";
 export class RideService implements IRideService{
 
     private mapsService: IRoutesService;
-    private driversService: IDriverService;
+    private driverService: IDriverService;
     private rideRepository: IRideRepository;
 
     constructor(){
         this.mapsService = new GoogleMapsRouteService();
-        this.driversService = new DriverService();
+        this.driverService = new DriverService();
         this.rideRepository = new RideRepository();
     }
 
@@ -44,35 +44,11 @@ export class RideService implements IRideService{
     }
     
     async confirm(confirmation: confirmRideDTO): Promise<void> {
-        if(confirmation.destination === null || confirmation.origin === null){
-            throw new InvalidDataException(INVALID_DATA);
-        }
-        if(confirmation.customer_id === null){
-            throw new InvalidDataException(INVALID_DATA);
-        }
+        this.validateOriginAndDestination(confirmation.origin, confirmation.destination);
+        
+        this.validateCustomer(confirmation.customer_id);
 
-        if(confirmation.destination === confirmation.origin){
-            throw new InvalidDataException(INVALID_DATA);
-        }
-
-        const driverCheck = await this.driversService.get(confirmation.driver.id);
-
-        if(!driverCheck){
-            throw new InvalidDataException(INVALID_DRIVER);
-        }
-
-        if(driverCheck.name !== confirmation.driver.name){
-            throw new InvalidDataException(INVALID_DRIVER);
-        }
-
-        const realDistance = confirmation.distance/1000;
-        if(realDistance < Number(driverCheck?.min_km)){
-            throw new InvalidDataException(INVALID_DISTANCE);
-        }
-
-        if(confirmation.value !== (realDistance*driverCheck.value)){
-            throw new InvalidDataException(INVALID_DATA);
-        }
+        await this.validateDriverAvailability(confirmation);
 
         await this.rideRepository.confirm(confirmation);
     }
@@ -86,7 +62,7 @@ export class RideService implements IRideService{
     private async findAvailableDrivers(distanceInMeters: number): Promise<DriverEntity[]> {
         const distanceInKm = distanceInMeters / 1000;
     
-        const drivers = await this.driversService.getAll();
+        const drivers = await this.driverService.getAll();
     
         const filtered = drivers.filter(driver => {
             return (driver.min_km) <= distanceInKm;
@@ -141,6 +117,47 @@ export class RideService implements IRideService{
         }
 
         return response
+    }
+
+    private validateOriginAndDestination(origin:string, destination:string):void{
+        if(destination === null || origin === null){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+
+        if(destination === undefined || origin === undefined){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+
+        if(destination === origin){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+    }
+
+    private validateCustomer(customer_id:string):void{
+        if(customer_id === null || customer_id === undefined){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+    }
+
+    private async validateDriverAvailability(confirmation:confirmRideDTO):Promise<void>{
+        const driverCheck = await this.driverService.get(confirmation.driver.id);
+
+        if(!driverCheck){
+            throw new InvalidDataException(INVALID_DRIVER);
+        }
+
+        if(driverCheck.name !== confirmation.driver.name){
+            throw new InvalidDataException(INVALID_DRIVER);
+        }
+
+        const realDistance = confirmation.distance/1000;
+        if(realDistance < Number(driverCheck?.min_km)){
+            throw new InvalidDataException(INVALID_DISTANCE);
+        }
+
+        if(confirmation.value !== (realDistance*driverCheck.value)){
+            throw new InvalidDataException(INVALID_DATA);
+        }
     }
 
 }
