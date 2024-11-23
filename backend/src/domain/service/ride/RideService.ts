@@ -1,4 +1,4 @@
-import { INVALID_DATA, INVALID_DISTANCE, INVALID_DRIVER } from "../../../application/exceptions/errorCodes";
+import { INVALID_DATA, INVALID_DISTANCE, INVALID_DRIVER, NO_RIDES_FOUND } from "../../../application/exceptions/errorCodes";
 import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
 import { IRideRepository } from "../../../infra/repository/ride/IRideRepository";
 import { RideRepository } from "../../../infra/repository/ride/RideRepository";
@@ -54,9 +54,14 @@ export class RideService implements IRideService{
     }
 
 
-    //TODO
     async get(params: getRideParamsDTO): Promise<getRideResponseDTO> {
-        return await this.rideRepository.get(params);
+        this.validateGetCustomer(params);
+
+        await this.validateGetDriver(params);
+
+        const rides = await this.validateRidesExist(params);
+
+        return rides;
     }
 
     private async findAvailableDrivers(distanceInMeters: number): Promise<DriverEntity[]> {
@@ -158,6 +163,29 @@ export class RideService implements IRideService{
         if(confirmation.value !== (realDistance*driverCheck.value)){
             throw new InvalidDataException(INVALID_DATA);
         }
+    }
+
+    private validateGetCustomer(params:getRideParamsDTO):void{
+        if(params.customer_id === null || params.customer_id === undefined){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+    }
+
+    private async validateGetDriver(params:getRideParamsDTO):Promise<void>{
+        if(params.driver_id !== null && params.driver_id !== undefined){
+            const checkDriver = await this.driverService.get(params.driver_id);
+            if(!checkDriver){
+                throw new InvalidDataException(INVALID_DRIVER);
+            }
+        }
+    }
+
+    private async validateRidesExist(params:getRideParamsDTO):Promise<getRideResponseDTO>{
+        const rides = await this.rideRepository.get(params);
+        if(rides.rides.length === 0){
+            throw new NotFoundException(NO_RIDES_FOUND);
+        }
+        return rides;
     }
 
 }
