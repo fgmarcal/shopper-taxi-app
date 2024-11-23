@@ -44,11 +44,11 @@ export class RideService implements IRideService{
     }
     
     async confirm(confirmation: confirmRideDTO): Promise<void> {
-        this.validateOriginAndDestination(confirmation.origin, confirmation.destination);
+        this.validateRideOriginAndDestination(confirmation.origin, confirmation.destination);
         
-        this.validateCustomer(confirmation.customer_id);
+        this.validateRideCustomer(confirmation.customer_id);
 
-        await this.validateDriverAvailability(confirmation);
+        await this.validateRideDriverAndDistance(confirmation);
 
         await this.rideRepository.confirm(confirmation);
     }
@@ -119,7 +119,7 @@ export class RideService implements IRideService{
         return response
     }
 
-    private validateOriginAndDestination(origin:string, destination:string):void{
+    private validateRideOriginAndDestination(origin:string, destination:string):void{
         if(destination === null || origin === null){
             throw new InvalidDataException(INVALID_DATA);
         }
@@ -133,13 +133,13 @@ export class RideService implements IRideService{
         }
     }
 
-    private validateCustomer(customer_id:string):void{
+    private validateRideCustomer(customer_id:string):void{
         if(customer_id === null || customer_id === undefined){
             throw new InvalidDataException(INVALID_DATA);
         }
     }
 
-    private async validateDriverAvailability(confirmation:confirmRideDTO):Promise<void>{
+    private async validateRideDriverAndDistance(confirmation:confirmRideDTO):Promise<void>{
         const driverCheck = await this.driverService.get(confirmation.driver.id);
 
         if(!driverCheck){
