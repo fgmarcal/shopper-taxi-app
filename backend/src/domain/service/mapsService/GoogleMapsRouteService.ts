@@ -12,17 +12,19 @@ export class GoogleMapsRouteService implements IRoutesService{
     async getRoute(request: estimateRequestDTO): Promise<routeServiceResponse|null> {
         const origin = request.origin;
         const destination = request.destination;
-        
-        const GOOGLE_API_URL = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${this.API_KEY}`;
 
         try {
-            const apiResponse = await fetch(GOOGLE_API_URL);
+            const apiResponse = await fetch(this.getGoogleApiUrl(origin, destination));
             const data = await apiResponse.json();
             return data;
         } catch (error) {
             console.error(error);
             return null;
         }
+    }
+
+    private getGoogleApiUrl(origin:string, destination:string):string{
+        return `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${this.API_KEY}`;
     }
     
 }

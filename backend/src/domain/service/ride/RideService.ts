@@ -89,12 +89,12 @@ export class RideService implements IRideService{
         const drivers = await this.driversService.getAll();
     
         const filtered = drivers.filter(driver => {
-            return Number(driver.min_km) <= distanceInKm;
+            return (driver.min_km) <= distanceInKm;
         });
     
         filtered.sort((a, b) => {
-            const priceA = Number(a.value) * distanceInKm;
-            const priceB = Number(b.value) * distanceInKm;
+            const priceA = (a.value) * distanceInKm;
+            const priceB = (b.value) * distanceInKm;
             return priceA - priceB;
         }).map((driver) => driver.value = (driver.value * distanceInKm));
     
