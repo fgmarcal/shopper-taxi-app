@@ -4,6 +4,7 @@ import {customerRoutes} from "./routes/customer/CustomerRoutes";
 import { driverRoutes } from "./routes/driver/DriverRoutes";
 import { reviewRoutes } from "./routes/driverReview/ReviewRoutes";
 import { errorHandler } from "../application/middleware/ErrorHandler";
+import { rideRoutes } from "./routes/ride/RideRoutes";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(customerRoutes);
 app.use(driverRoutes);
 app.use(reviewRoutes);
+app.use(rideRoutes);
 
 
 app.use(errorHandler);

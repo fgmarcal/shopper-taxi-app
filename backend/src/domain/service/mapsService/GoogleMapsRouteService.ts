@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export class GoogleMapsService implements IRoutesService{
+export class GoogleMapsRouteService implements IRoutesService{
 
     private API_KEY:string = String(process.env.GOOGLE_API_KEY);
     
