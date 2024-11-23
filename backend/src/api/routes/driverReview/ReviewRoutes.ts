@@ -11,6 +11,10 @@ reviewRoutes
     .get(reviewController.getAllReviews);
 
 reviewRoutes
+    .route("/reviews/:id")
+    .get(reviewController.getAllDriverReviews);
+
+reviewRoutes
     .route("/reviews/create")
     .post(reviewController.createReview);
 

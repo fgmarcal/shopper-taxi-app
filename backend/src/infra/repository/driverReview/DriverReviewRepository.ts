@@ -17,8 +17,21 @@ export class DriverReviewRepository implements IDriverReviewRepository{
         })
     }
 
-    async getAll(): Promise<getReviewDTO[]> {
+    async getAll(): Promise<DriverReview[]> {
         const fullReviews:DriverReview[] = await prisma.driverReview.findMany();
+        if(!fullReviews){
+            return []
+        }
+
+        return fullReviews;
+    }
+
+    async getAllById(id: number): Promise<getReviewDTO[]> {
+        const fullReviews:DriverReview[] = await prisma.driverReview.findMany({
+            where:{
+                driverId:id
+            }
+        });
         const simpleReviews:getReviewDTO[] = fullReviews.map((review) => ({
             comment:review.comment,
             rating:review.rating

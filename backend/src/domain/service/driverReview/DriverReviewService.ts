@@ -1,3 +1,4 @@
+import { DriverReview } from "@prisma/client";
 import { CUSTOMER_NOT_FOUND, DRIVER_NOT_FOUND, INVALID_DATA } from "../../../application/exceptions/errorCodes";
 import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
 import { ICustomerRepository } from "../../../infra/repository/customer/ICustomerRepository";
@@ -39,8 +40,15 @@ export class DriverReviewService implements IDriverReviewService{
         await this.driverReviewRepository.create(review);
     }
 
-    async getAll(): Promise<getReviewDTO[]> {
+    async getAll(): Promise<DriverReview[]> {
         return await this.driverReviewRepository.getAll();
+    }
+
+    async getAllById(id: number): Promise<getReviewDTO[]> {
+        if(!id){
+            throw new InvalidDataException(INVALID_DATA);
+        }
+        return await this.driverReviewRepository.getAllById(id);
     }
 
 }

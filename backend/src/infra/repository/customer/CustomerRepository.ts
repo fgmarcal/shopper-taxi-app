@@ -9,6 +9,9 @@ export class CustomerRepository implements ICustomerRepository{
         const customer = await prisma.customer.findUnique({
             where:{
                 email
+            },
+            include:{
+                reviews:true
             }
         })
         if(!customer){

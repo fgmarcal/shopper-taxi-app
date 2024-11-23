@@ -29,6 +29,16 @@ export class DriverReviewController{
         }
     }
 
+    getAllDriverReviews = async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            const driverId:number = Number(request.params.id);
+            const driverReviews = await this.driverReviewService.getAllById(driverId);
+            response.status(200).json(driverReviews);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     getAllReviews = async(request: Request, response: Response, next: NextFunction) =>{
         try {
             const reviews = await this.driverReviewService.getAll();

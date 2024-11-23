@@ -10,7 +10,10 @@ export class DriverRepository implements IDriverRepository {
         const driver = await prisma.driver.findUnique({
             where:{
                 id
-            }
+            },
+            include:{
+                reviews:true
+            },
         })
         if(!driver){
             return null;
