@@ -10,8 +10,8 @@ export class GoogleMapsRouteService implements IRoutesService{
     private API_KEY:string = String(process.env.GOOGLE_API_KEY);
     
     async getRoute(request: estimateRequestDTO): Promise<routeServiceResponse|null> {
-        const origin = this.convertAddress(request.origin);
-        const destination = this.convertAddress(request.destination);
+        const origin = request.origin;
+        const destination = request.destination;
         
         const GOOGLE_API_URL = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${this.API_KEY}`;
 
@@ -23,11 +23,6 @@ export class GoogleMapsRouteService implements IRoutesService{
             console.error(error);
             return null;
         }
-    }
-
-    private convertAddress(address:string): string {
-        address = address.replace(" ","+");
-        return address;
     }
     
 }

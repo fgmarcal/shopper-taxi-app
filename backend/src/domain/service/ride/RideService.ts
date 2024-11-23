@@ -23,7 +23,7 @@ export class RideService implements IRideService{
     }
 
     async estimate(request: estimateRequestDTO): Promise<estimateResponseDTO> {
-        if(!request.origin || !request.destination || !request.customer_id){
+        if(request.origin === null || request.destination === null || request.customer_id === null){
             throw new InvalidDataException(INVALID_DATA);
         }
 
