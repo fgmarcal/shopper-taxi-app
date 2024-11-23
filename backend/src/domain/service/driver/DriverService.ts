@@ -3,8 +3,8 @@ import { createDriverDto } from "../../entity/driver/dto/createDriverDTO";
 import { updateDriverDto } from "../../entity/driver/dto/updateDriverDTO";
 import { IDriverService } from "./IDriverService";
 import { IDriverRepository } from "../../../infra/repository/driver/IDriverRepository";
-import { InvalidDataException, NotFoundException } from "../../../exceptions/Exceptions";
-import { DRIVER_NOT_FOUND, INVALID_DATA } from "../../../exceptions/errorCodes";
+import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
+import { DRIVER_NOT_FOUND, INVALID_DATA } from "../../../application/exceptions/errorCodes";
 
 export class DriverService implements IDriverService{
 

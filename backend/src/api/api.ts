@@ -1,8 +1,9 @@
 import express from "express";
 import {customerRoutes} from "./routes/customer/CustomerRoutes";
-import { errorHandler } from "../middleware/ErrorHandler";
+
 import { driverRoutes } from "./routes/driver/DriverRoutes";
 import { reviewRoutes } from "./routes/driverReview/ReviewRoutes";
+import { errorHandler } from "../application/middleware/ErrorHandler";
 
 const app = express();
 

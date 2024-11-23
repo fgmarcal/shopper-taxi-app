@@ -1,5 +1,5 @@
-import { CUSTOMER_NOT_FOUND, DRIVER_NOT_FOUND, INVALID_DATA } from "../../../exceptions/errorCodes";
-import { InvalidDataException, NotFoundException } from "../../../exceptions/Exceptions";
+import { CUSTOMER_NOT_FOUND, DRIVER_NOT_FOUND, INVALID_DATA } from "../../../application/exceptions/errorCodes";
+import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
 import { ICustomerRepository } from "../../../infra/repository/customer/ICustomerRepository";
 import { IDriverRepository } from "../../../infra/repository/driver/IDriverRepository";
 import { IDriverReviewRepository } from "../../../infra/repository/driverReview/IDriverReviewRepository";

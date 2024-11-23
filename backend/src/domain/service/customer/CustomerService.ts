@@ -2,8 +2,8 @@ import { Customer } from "@prisma/client";
 import { createCustomerDto } from "../../entity/customer/dto/createCustomerDTO";
 import { ICustomerService } from "./ICustomerService";
 import { ICustomerRepository } from "../../../infra/repository/customer/ICustomerRepository";
-import { InvalidDataException, NotFoundException } from "../../../exceptions/Exceptions";
-import { CUSTOMER_NOT_FOUND, INVALID_DATA } from "../../../exceptions/errorCodes";
+import { InvalidDataException, NotFoundException } from "../../../application/exceptions/Exceptions";
+import { CUSTOMER_NOT_FOUND, INVALID_DATA } from "../../../application/exceptions/errorCodes";
 
 export class CustomerService implements ICustomerService{
 
