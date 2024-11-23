@@ -33,7 +33,7 @@ export class DriverReviewService implements IDriverReviewService{
             throw new NotFoundException(DRIVER_NOT_FOUND);
         }
 
-        if(!review.rating){
+        if(!review.rating || review.rating > 5 || review.rating < 0){
             throw new InvalidDataException(INVALID_DATA);
         }
         
