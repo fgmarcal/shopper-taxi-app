@@ -38,7 +38,9 @@ export class RideService implements IRideService{
 
         const route = await this.mapsService.getRoute(request) as routeServiceResponse;
 
-        return this.createRouteReponse(route);
+        const response = this.createRouteReponse(route)
+
+        return response;
     }
     
     async confirm(confirmation: confirmRideDTO): Promise<void> {
@@ -54,7 +56,7 @@ export class RideService implements IRideService{
         }
 
         const driverCheck = await this.driversService.get(confirmation.driver.id);
-        
+
         if(!driverCheck){
             throw new InvalidDataException(INVALID_DRIVER);
         }
@@ -82,19 +84,19 @@ export class RideService implements IRideService{
     }
 
     private async findAvailableDrivers(distanceInMeters: number): Promise<DriverEntity[]> {
-        const distance_km = distanceInMeters / 1000;
+        const distanceInKm = distanceInMeters / 1000;
     
         const drivers = await this.driversService.getAll();
     
         const filtered = drivers.filter(driver => {
-            return Number(driver.min_km) <= distance_km;
+            return Number(driver.min_km) <= distanceInKm;
         });
     
         filtered.sort((a, b) => {
-            const priceA = Number(a.value) * distance_km;
-            const priceB = Number(b.value) * distance_km;
+            const priceA = Number(a.value) * distanceInKm;
+            const priceB = Number(b.value) * distanceInKm;
             return priceA - priceB;
-        }).map((driver) => driver.value = (driver.value * distance_km));
+        }).map((driver) => driver.value = (driver.value * distanceInKm));
     
         return filtered;
     }
@@ -115,26 +117,26 @@ export class RideService implements IRideService{
         const distance = leg.distance.value;
         const duration = leg.duration.text;
 
-        const startAddressLat = leg.start_location.lat;
-        const startAddressLong = leg.start_location.lng;
+        const startAddressLatitude = leg.start_location.lat;
+        const startAddressLongitude = leg.start_location.lng;
 
-        const endAddressLat = leg.end_location.lat;
-        const endAddressLong = leg.end_location.lng;
+        const endAddressLatitude = leg.end_location.lat;
+        const endAddressLongitude = leg.end_location.lng;
 
-        const options:DriverEntity[] = await this.findAvailableDrivers(distance);
+        const driversOptions:DriverEntity[] = await this.findAvailableDrivers(distance);
 
         const response:estimateResponseDTO = {
             origin:{
-                latitude:startAddressLat,
-                longitude:startAddressLong
+                latitude:startAddressLatitude,
+                longitude:startAddressLongitude
             },
             destination:{
-                latitude:endAddressLat,
-                longitude:endAddressLong
+                latitude:endAddressLatitude,
+                longitude:endAddressLongitude
             },
             distance:distance,
             duration:duration,
-            options:options,
+            options:driversOptions,
             routeResponse:routeData
         }
 
