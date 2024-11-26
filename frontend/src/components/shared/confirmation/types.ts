@@ -1,5 +1,5 @@
-import { DriverOption } from "../../../entity/ride/estimateResponse";
+import { estimateResponse } from "../../../entity/ride/estimateResponse";
 
 export interface ConfirmationType{
-    drivers:DriverOption[]
+    estimate: estimateResponse;
 }

@@ -130,7 +130,7 @@ export const Trip:React.FC = () => {
             />
           </div>
           <div>
-            <Confirmation drivers={response.options}/>
+            <Confirmation estimate={response}/>
           </div>
         </div>
       </Modal>
