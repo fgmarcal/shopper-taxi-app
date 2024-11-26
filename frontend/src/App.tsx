@@ -1,7 +1,7 @@
 import React from 'react'
 import './index.css';
 import { APIProvider } from '@vis.gl/react-google-maps';
-import { Home } from './components/pages/home/Home';
+import { Routes } from './routes/Routes';
 
 
 export const App:React.FC = () => {
@@ -10,7 +10,7 @@ export const App:React.FC = () => {
   return (
     <>
       <APIProvider apiKey={API_KEY}>
-        <Home />
+        <Routes />
       </APIProvider>
     </>
   )
