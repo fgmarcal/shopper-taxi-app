@@ -33,8 +33,8 @@ export const Home:React.FC = () => {
     try {
       const find = await customerRepository.get(email);
       if(find){
-        sessionStorage.setItem('userEmail',JSON.stringify(find.email));
-        sessionStorage.setItem('userName',JSON.stringify(find.name));
+        sessionStorage.setItem('userEmail',(find.email));
+        sessionStorage.setItem('userName',(find.name));
         setCustomer(find);
       }
     } catch (error) {
@@ -64,7 +64,7 @@ export const Home:React.FC = () => {
     <div style={{
       display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center', margin:'1rem auto'
     }}>
-      <h1>Taxi App!</h1>
+      <h1 style={{fontWeight:900, fontSize:'8rem'}}>Taxi App!</h1>
       <h2>Insira seu e-mail cadastrado para iniciar uma viagem!</h2>
       <Form
         form={form}
@@ -78,9 +78,9 @@ export const Home:React.FC = () => {
         <label style={{color:'#FFF'}}>E-mail</label>
         <Form.Item name={['email']}
             rules={[{ required: true, message:"E-mail é um campo obrigatório" },{pattern:emailPattern, message:"e-mail inválido"}]}>
-          <Input style={{fontWeight:'bold'}}/>
+          <Input style={{fontWeight:'bold', width:'15rem'}}/>
         </Form.Item>
-        <Button type='primary' htmlType='submit' style={{marginRight:'2rem'}} loading={loading}>Entrar</Button> 
+        <Button type='primary' htmlType='submit' style={{marginRight:'4rem'}} loading={loading}>Entrar</Button> 
         <Button type='primary' danger onClick={register} loading={loading}>Registre-se!</Button>
       </Form>
     </div>

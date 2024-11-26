@@ -64,7 +64,7 @@ export const Register:React.FC = () => {
     <div style={{
       display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center', margin:'1rem auto'
     }}>
-      <h1>Taxi App!</h1>
+      <h1 style={{fontWeight:900, fontSize:"8rem"}}>Taxi App!</h1>
       <h2>Insira seu nome e e-mail válido para se cadastrar e fazer viagens!</h2>
       <Form
         form={form}

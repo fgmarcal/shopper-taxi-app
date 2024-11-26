@@ -3,6 +3,7 @@ import { Map, useMap } from "@vis.gl/react-google-maps";
 import { RideRepository } from "../../../repository/ride/RideRepository";
 import { estimateRide } from "../../../entity/ride/estimateRide";
 import { mapContainer } from "./style";
+import { estimateResponse } from "../../../entity/ride/estimateResponse";
 
 
 const rideRepository = new RideRepository();
@@ -20,7 +21,7 @@ export const GoogleMap: React.FC<estimateRide> = (ride:estimateRide) => {
 useEffect(() => {
     const fetchRoute = async () => {
     try {
-        const response = await rideRepository.estimate(ride);
+        const response:estimateResponse = await rideRepository.estimate(ride);
         if (!response.origin || !response.destination) {
         console.error("Origem ou Destino não selecionado");
         return;
