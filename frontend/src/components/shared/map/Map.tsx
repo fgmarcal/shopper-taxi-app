@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Map, useMap } from "@vis.gl/react-google-maps";
-import { RideRepository } from "../../../repository/ride/RideRepository";
-import { estimateRide } from "../../../entity/ride/estimateRide";
 import { mapContainer } from "./style";
-import { estimateResponse } from "../../../entity/ride/estimateResponse";
+import { mapRender } from "./types";
 
 
-const rideRepository = new RideRepository();
 
 const defaultCenter = {
     //Localização de São Paulo
@@ -14,28 +11,34 @@ const defaultCenter = {
     lng:-46.67912328149004
 }
 
-export const GoogleMap: React.FC<estimateRide> = (ride:estimateRide) => {
+export const GoogleMap: React.FC<mapRender> = (ride) => {
     const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
+    const [center, setMapCenter] = useState<{ lat: number; lng: number } | null>(null);
+
     const map = useMap();
 
 useEffect(() => {
-    const fetchRoute = async () => {
-    try {
-        const response:estimateResponse = await rideRepository.estimate(ride);
-        if (!response.origin || !response.destination) {
+    if (!ride.origin || !ride.destination) {
         console.error("Origem ou Destino não selecionado");
         return;
     }
+    const fetchRoute = async () => {
+    try {
+        
     const directionsService = new google.maps.DirectionsService();
     directionsService.route(
     {
-        origin: { lat: response.origin.latitude, lng: response.origin.longitude },
-        destination: { lat: response.destination.latitude, lng: response.destination.longitude },
-        travelMode: google.maps.TravelMode.DRIVING, // Ajuste para o modo de viagem desejado
+        origin: { lat: ride.origin.latitude, lng: ride.origin.longitude },
+        destination: { lat: ride.destination.latitude, lng: ride.destination.longitude },
+        travelMode: google.maps.TravelMode.DRIVING,
     },
     (result, status) => {
         if (status === google.maps.DirectionsStatus.OK) {
         setDirections(result);
+        const bounds = result?.routes[0].bounds;
+        const center = bounds?.getCenter();
+        if(center)
+            setMapCenter({ lat: center?.lat(), lng: center?.lng() }); 
         } else {
         console.error("Erro ao obter rota:", status);
         }
@@ -46,7 +49,7 @@ useEffect(() => {
 };
 
     fetchRoute();
-}, []);
+}, [ride]);
 
 useEffect(() => {
     if (map && directions) {
@@ -78,6 +81,7 @@ return (
     <div style={mapContainer}>
         <Map
             defaultCenter={defaultCenter}
+            center={center}
             zoom={directions ? undefined : 9}
             disableDefaultUI
             disableDoubleClickZoom

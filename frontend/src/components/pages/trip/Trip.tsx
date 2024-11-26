@@ -1,15 +1,21 @@
-import { Button, Form, FormProps, Input } from 'antd'
+import { Button, Form, FormProps, Input, Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { estimateRide } from '../../../entity/ride/estimateRide';
 import { TripRequest } from './types';
 import { notifyError } from '../../shared/popMessage/PopMessage';
 import { GoogleMap } from '../../shared/map/Map';
+import { RideRepository } from '../../../repository/ride/RideRepository';
+import { estimateResponse } from '../../../entity/ride/estimateResponse';
+import { Confirmation } from '../../shared/confirmation/Confirmation';
 
+const rideRepository = new RideRepository();
 
 export const Trip:React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [estimate, setEstimate] = useState<estimateRide>({} as estimateRide);
-  const [loadMap, setLoadMap] = useState<boolean>(false);
+  const [response, setReponse] = useState<estimateResponse>({} as estimateResponse);
+
+  const [loadModal, setLoadModal] = useState<boolean>(false);
 
   const[form] = Form.useForm();
 
@@ -30,7 +36,7 @@ export const Trip:React.FC = () => {
       }
       try {
         setEstimate(estimateRide);
-        setLoadMap(true);
+        setLoadModal(true);
         setLoading(false);
 
 
@@ -39,14 +45,34 @@ export const Trip:React.FC = () => {
         setLoading(false);
         notifyError("Algo errado com a sua viagem");  
       }
+    } 
+  }
 
-    }
-          
-    }
+  const closeModal =()=>{
+    form.resetFields();
+    setLoadModal(false);
+  }
 
-    useEffect(()=>{
-      if(!loadMap) return;
-    },[loadMap])
+
+  useEffect(()=>{
+    if(!estimate) return;
+
+    const fetchRoute = async(params:estimateRide)=>{
+      try {
+        const apiCall:estimateResponse = await rideRepository.estimate(params);
+        if (!apiCall.origin || !apiCall.destination) {
+          console.error("Origem ou Destino não selecionado");
+          return;
+        }
+        console.log(apiCall)
+        setReponse(apiCall);
+    } catch (error) {
+      console.error("Erro ao chamar a API do backend:", error);
+    }
+  }
+
+  fetchRoute(estimate);
+  },[estimate])
 
   return (
 
@@ -65,27 +91,50 @@ export const Trip:React.FC = () => {
         autoComplete='off'
         clearOnDestroy={true}
       >
+
+        <label style={{color:'#FFF', fontSize:'1.3rem', fontWeight:'bold'}}>Id do viajante!</label>
+        <p style={{color:'#FFF', fontSize:'1.3rem', fontWeight:'lighter'}}>{customerEmail}</p>
+
         <label style={{color:'#FFF', fontSize:'1.3rem', fontWeight:'bold'}}>Origem!</label>
         <Form.Item name={['origin']}
             rules={[{ required: true, message:"Insira a sua origem" }]}>
-          <Input style={{fontWeight:'bold', width:'20rem'}} placeholder='Rua do Tal, 999, Cidade, Estado'/>
+          <Input type='text' style={{fontWeight:'bold', width:'20rem'}} placeholder='Rua do Tal, 999, Cidade, Estado'/>
         </Form.Item>
 
         <label style={{color:'#FFF', fontSize:'1.3rem', fontWeight:'bold'}}>Destino!</label>
         <Form.Item name={['destination']}
             rules={[{ required: true, message:"Insira o seu destino" }]}>
-          <Input style={{fontWeight:'bold', width:'20rem'}} placeholder='Rua do Fulano, 888, Cidade, Estado'/>
+          <Input type='text' style={{fontWeight:'bold', width:'20rem'}} placeholder='Rua do Fulano, 888, Cidade, Estado'/>
         </Form.Item>
         <Button type='primary' htmlType='submit' style={{margin:'4rem', fontSize:'1rem', fontWeight:900}} loading={loading}>Calcule minha viagem!</Button> 
       </Form>
     </div>
     <div style={{display:'flex', alignItems:"center", justifyContent:'center', marginBottom:'3rem'}}>
-      {loadMap? 
-      <GoogleMap 
-        key={'map'} 
-        origin={estimate.origin} 
-        destination={estimate.destination} 
-        email={estimate.email}/> : null}
+      {loadModal? 
+      <Modal
+        open={loadModal}
+        destroyOnClose={true}
+        onCancel={()=> closeModal()}
+        centered
+        width={'70rem'}
+        height={'30rem'}
+        footer={false}
+        title={`Sua viagem para ${estimate.destination}`}
+
+      >
+        <div style={{display:'flex', flexDirection:'row', width:'60rem', alignItems:'start', justifyContent:'stretch'}}>
+          <div>
+            <GoogleMap 
+              origin={response.origin}
+              destination={response.destination}
+            />
+          </div>
+          <div>
+            <Confirmation drivers={response.options}/>
+          </div>
+        </div>
+      </Modal>
+      : null}
     </div>
     </>
   )

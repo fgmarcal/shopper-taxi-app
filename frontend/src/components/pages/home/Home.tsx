@@ -4,6 +4,7 @@ import { Customer } from '../../../entity/customer/createCustomer';
 import { notifyError } from '../../shared/popMessage/PopMessage';
 import { CustomerRepository } from '../../../repository/customer/CustomerRepository';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../../hooks/authContext';
 
 const customerRepository = new CustomerRepository();
 
@@ -15,6 +16,8 @@ export const Home:React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const [customer, setCustomer] = useState<Customer>();
+
+  const {signed, setSigned} = useAuth();
 
   const navigate = useNavigate();
 
@@ -35,11 +38,13 @@ export const Home:React.FC = () => {
       if(find){
         sessionStorage.setItem('userEmail',(find.email));
         sessionStorage.setItem('userName',(find.name));
+        setSigned(true);
         setCustomer(find);
       }
     } catch (error) {
       console.error(error);
       notifyError("Erro! Você possui cadastro?");
+      setSigned(false);
       setLoading(false);
     } 
   }
@@ -53,12 +58,16 @@ export const Home:React.FC = () => {
     const findUser = ()=>{
       const found = sessionStorage.getItem('userEmail');
       if(found){
-        return navigate('/trip')
+        setSigned(true);
+        navigate('/trip');
+      }else{
+        setSigned(false);
+        form.resetFields();
+        navigate('/')
       }
-      return navigate('/')
     }
     findUser()
-  },[customer, navigate])
+  },[customer, signed])
 
   return (
     <div style={{

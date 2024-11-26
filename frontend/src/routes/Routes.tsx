@@ -4,10 +4,11 @@ import { Home } from '../components/pages/home/Home'
 import { Trip } from '../components/pages/trip/Trip'
 import { History } from '../components/pages/history/History'
 import { Register } from '../components/pages/register/Register'
+import { useAuth } from '../hooks/authContext'
 
 export const Routes:React.FC = () => {
 
-  const signed = sessionStorage.getItem('userEmail');
+  const {signed} = useAuth();
 
   const ForbiddenAcces:React.FC =()=>{
     return (<Navigate to='/' />)

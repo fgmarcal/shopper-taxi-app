@@ -8,7 +8,7 @@ export interface estimateResponse{
 
 }
 
-type LatLong = {
+export type LatLong = {
     latitude:number,
     longitude:number
 }
