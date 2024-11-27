@@ -7,6 +7,8 @@ import { GoogleMap } from '../../shared/map/Map';
 import { RideRepository } from '../../../repository/ride/RideRepository';
 import { estimateResponse } from '../../../entity/ride/estimateResponse';
 import { Confirmation } from '../../shared/confirmation/Confirmation';
+import { useAppContext } from '../../../hooks/useAppContext';
+import { Link } from 'react-router';
 
 const rideRepository = new RideRepository();
 
@@ -18,9 +20,10 @@ export const Trip:React.FC = () => {
   const [loadModal, setLoadModal] = useState<boolean>(false);
 
   const[form] = Form.useForm();
+  const {customerId, customerName, setOriginContext, setDestinationContext} = useAppContext();
 
-  const customerName = sessionStorage.getItem('userName')?.split(" ")[0];
-  const customerEmail = sessionStorage.getItem('userEmail');
+  const userName = customerName.split(" ")[0];
+  const customerEmail = customerId
 
   const onFinish:FormProps['onFinish'] = async (trip:TripRequest) =>{
     if(trip.destination === trip.origin){
@@ -38,6 +41,8 @@ export const Trip:React.FC = () => {
         setEstimate(estimateRide);
         setLoadModal(true);
         setLoading(false);
+        setOriginContext(estimateRide.origin);
+        setDestinationContext(estimateRide.destination);
 
 
       } catch (error) {
@@ -55,7 +60,7 @@ export const Trip:React.FC = () => {
 
 
   useEffect(()=>{
-    if(!estimate) return;
+    if (!estimate || !estimate.origin || !estimate.destination) return;
 
     const fetchRoute = async(params:estimateRide)=>{
       try {
@@ -64,7 +69,6 @@ export const Trip:React.FC = () => {
           console.error("Origem ou Destino não selecionado");
           return;
         }
-        console.log(apiCall)
         setReponse(apiCall);
     } catch (error) {
       console.error("Erro ao chamar a API do backend:", error);
@@ -78,7 +82,10 @@ export const Trip:React.FC = () => {
 
     <>
     <div style={{display:'flex', alignItems:'center', justifyContent:'center', margin:'1rem auto'}}>
-      <h1 style={{fontWeight:900, fontSize:'8rem'}}>{`Para onde vamos hoje, ${customerName}?`}</h1>
+      <h1 style={{fontWeight:900, fontSize:'8rem'}}>{`Para onde vamos hoje, ${userName}?`}</h1>
+    </div>
+    <div style={{display:'flex',flexDirection:'row',  alignItems:'center', justifyContent:'flex-end', margin:'1rem 2rem'}}>
+      <Link to={'/history'}>Quero ver meu histórico de viagens!</Link>
     </div>
 
     <div style={{display:'flex', alignItems:'center', justifyContent:'center', margin:'1rem auto'}}>

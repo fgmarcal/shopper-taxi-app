@@ -2,7 +2,7 @@ import React from 'react'
 import './index.css';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import { Routes } from './routes/Routes';
-import { AuthProvider } from './context/authContext';
+import { ContextProvider } from './context/appContext';
 
 
 export const App:React.FC = () => {
@@ -11,9 +11,9 @@ export const App:React.FC = () => {
   return (
     <>
       <APIProvider apiKey={API_KEY}>
-        <AuthProvider>
+        <ContextProvider>
           <Routes />
-        </AuthProvider>
+        </ContextProvider>
       </APIProvider>
     </>
   )

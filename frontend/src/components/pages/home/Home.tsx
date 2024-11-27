@@ -4,7 +4,7 @@ import { Customer } from '../../../entity/customer/createCustomer';
 import { notifyError } from '../../shared/popMessage/PopMessage';
 import { CustomerRepository } from '../../../repository/customer/CustomerRepository';
 import { useNavigate } from 'react-router';
-import { useAuth } from '../../../hooks/authContext';
+import { useAppContext } from '../../../hooks/useAppContext';
 
 const customerRepository = new CustomerRepository();
 
@@ -17,7 +17,7 @@ export const Home:React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [customer, setCustomer] = useState<Customer>();
 
-  const {signed, setSigned} = useAuth();
+  const {signed, setSigned, setCustomerId, setCustomerName} = useAppContext();
 
   const navigate = useNavigate();
 
@@ -40,6 +40,8 @@ export const Home:React.FC = () => {
         sessionStorage.setItem('userName',(find.name));
         setSigned(true);
         setCustomer(find);
+        setCustomerId(find.email);
+        setCustomerName(find.name);
       }
     } catch (error) {
       console.error(error);
@@ -56,8 +58,11 @@ export const Home:React.FC = () => {
   useEffect(()=>{
     if(!customer) return;
     const findUser = ()=>{
-      const found = sessionStorage.getItem('userEmail');
-      if(found){
+      const email = sessionStorage.getItem('userEmail');
+      const name = sessionStorage.getItem('userName');
+      if(email && name){
+        setCustomerId(email);
+        setCustomerName(name);
         setSigned(true);
         navigate('/trip');
       }else{

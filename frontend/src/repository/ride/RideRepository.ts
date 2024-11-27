@@ -3,6 +3,8 @@ import { estimateRide } from "../../entity/ride/estimateRide"
 import { rideRoutes } from "../../routes/endpoints"
 import { confirmRide } from "../../entity/ride/confirmRide";
 import { estimateResponse } from "../../entity/ride/estimateResponse";
+import { getRides } from "../../entity/ride/getRides";
+import { getRideResponse } from "../../entity/ride/getRidesResponse";
 
 export class RideRepository{
 
@@ -25,7 +27,15 @@ export class RideRepository{
         }
     }
 
-    get = async() =>{
-
+    get = async(params:getRides):Promise<getRideResponse> =>{
+        const driverQuery = params.driver_id !== undefined ? `?driver_id=${encodeURIComponent(params.driver_id)}` : '';
+        const fullQuery = `${encodeURIComponent(params.customer_id)}`;
+        try {
+            const result = await axios.get(rideRoutes.getByCustomer+fullQuery+driverQuery);
+            return result.data;
+        } catch (error) {
+            console.error(error);
+            throw new Error(JSON.stringify(error))
+        }
     }
 }

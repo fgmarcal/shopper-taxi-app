@@ -1,31 +1,44 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ConfirmationType } from './types';
 import { DriverOption } from '../../../entity/ride/estimateResponse';
+import { useNavigate } from 'react-router';
+import { confirmRide } from '../../../entity/ride/confirmRide';
+import { RideRepository } from '../../../repository/ride/RideRepository';
+import { useAppContext } from '../../../hooks/useAppContext';
+import { notifyError, notifySuccess } from '../popMessage/PopMessage';
+import { Button } from 'antd';
+
+const rideRepository = new RideRepository();
 
 export const Confirmation:React.FC<ConfirmationType> = ({estimate}) => {
 
-    const [selectedDriver, setSelectedDriver] = useState<DriverOption | null>(null);
+    const navigate = useNavigate();
+    const {customerId, originContext, destinationContext} = useAppContext();
 
 
-    useEffect(() => {
-        if (!estimate || !estimate.options ||estimate.options.length === 0) return;
-        const fetchOptions = () => {
-            console.log("Fetching driver options...");
+    const handleConfirmation = async (driver: DriverOption): Promise<void> => {
+        const rideConfirmation: confirmRide = {
+            customer_id: customerId,
+            origin: originContext,
+            destination: destinationContext,
+            distance: estimate.distance,
+            duration: estimate.duration,
+            driver: {
+                id: driver.id,
+                name: driver.name,
+            },
+            value: driver.value,
         };
-        fetchOptions();
-    }, [estimate]);
 
-
-    const handleSelectDriver = (driver: DriverOption) => {
-        setSelectedDriver(driver);
-        console.log("Motorista selecionado:", driver);
+        try {
+            await rideRepository.confirm(rideConfirmation);
+            notifySuccess("Viagem cadastrada com sucesso!");
+            navigate('/history');
+        } catch (error) {
+            console.error(error);
+            notifyError("Houve um erro ao confirmar a viagem. Tente novamente mais tarde!");
+        }
     };
-
-    useEffect(()=>{
-        if(!selectedDriver) return;
-        
-    },[selectedDriver])
-
     return (
         <div>
             {estimate?.options && estimate.options.length > 0 ? (
@@ -39,7 +52,7 @@ export const Confirmation:React.FC<ConfirmationType> = ({estimate}) => {
                             borderRadius: '0.3125rem'
                         }}
                     >
-                        <p><strong>Nome:</strong> {driver.name}</p>
+                        <p><strong>Nome do Motorista:</strong> {driver.name}</p>
                         <p><strong>Descrição:</strong> {driver.description}</p>
                         <p><strong>Veículo:</strong> {driver.vehicle}</p>
                         
@@ -72,19 +85,16 @@ export const Confirmation:React.FC<ConfirmationType> = ({estimate}) => {
                         )}
     
                         <p><strong>Valor:</strong> R$ {driver.value.toFixed(2).replace('.', ',')}</p>
-                        <button 
+                        <Button 
                             style={{ 
-                                backgroundColor: '#007bff', 
-                                color: '#fff', 
-                                padding: '0.5rem 1rem', 
-                                border: 'none', 
-                                borderRadius: '0.1875rem', 
-                                cursor: 'pointer' 
+                                fontWeight:900
                             }}
-                            onClick={() => handleSelectDriver(driver)}
+                            onClick={() => handleConfirmation(driver)}
+                            type='primary'
+                            
                         >
                             Vou com este!
-                        </button>
+                        </Button>
                     </div>
                 ))
             ) : (

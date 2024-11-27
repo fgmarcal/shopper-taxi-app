@@ -36,9 +36,10 @@ useEffect(() => {
         if (status === google.maps.DirectionsStatus.OK) {
         setDirections(result);
         const bounds = result?.routes[0].bounds;
-        const center = bounds?.getCenter();
-        if(center)
+        if(bounds){
+            const center = bounds.getCenter();
             setMapCenter({ lat: center?.lat(), lng: center?.lng() }); 
+            }
         } else {
         console.error("Erro ao obter rota:", status);
         }
