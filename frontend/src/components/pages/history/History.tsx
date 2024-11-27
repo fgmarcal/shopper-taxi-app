@@ -6,6 +6,7 @@ import { RideRepository } from '../../../repository/ride/RideRepository';
 import { DriverRepository } from '../../../repository/driver/DriverRepository';
 import { getRides } from '../../../entity/ride/getRides';
 import { notifyError } from '../../shared/popMessage/PopMessage';
+import { Select } from '../../shared/select/Select';
 
 const rideRepository = new RideRepository();
 const driverRepository = new DriverRepository();
@@ -48,7 +49,8 @@ export const History:React.FC = () => {
           setHistory(result);
         }
       } catch (error) {
-        notifyError('Nenhuma viagem com este motorista!');
+        notifyError('Ops! Nenhuma viagem com este motorista!');
+        setHistory(null)
         console.error(error);
       } finally {
         setLoading(false);
@@ -79,16 +81,13 @@ export const History:React.FC = () => {
         <Link to={'/trip'} style={{ color: '#FFF', fontWeight: 900 }}>Fazer uma nova viagem</Link>
       </div>
        <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
-        <select onChange={handleDriverFilter} style={{ padding: '0.5rem', fontSize: '1rem' }}>
-          <option value="">Todos os motoristas</option>
-          {drivers.map(driver => (
-            <option key={driver.id} value={driver.id}>{driver.name}</option>
-          ))}
-        </select>
+
+        <Select onChange={(e)=> handleDriverFilter(e)} drivers={drivers}/>
+
       </div>
-      <div style={{ width: '100%', overflowX: 'auto', display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+      <div style={{ width: '90%', overflowX: 'auto', display: 'flex', justifyContent: 'center', marginTop: '2rem', alignItems:'center' }}>
         {history && history.rides.length > 0 ? (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table style={{ width: '80%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
                 <th>Data e Hora</th>
@@ -97,7 +96,7 @@ export const History:React.FC = () => {
                 <th>Destino</th>
                 <th>Distância (km)</th>
                 <th>Tempo</th>
-                <th>Valor (R$)</th>
+                <th>Valor</th>
               </tr>
             </thead>
             <tbody>
@@ -109,7 +108,7 @@ export const History:React.FC = () => {
                   <td>{ride.destination}</td>
                   <td>{(ride.distance/1000).toFixed(2).replace('.',',')}</td>
                   <td>{ride.duration}</td>
-                  <td>{ride.value.toFixed(2)}</td>
+                  <td>R$ {ride.value.toFixed(2).replace('.',',')}</td>
                 </tr>
               ))}
             </tbody>
