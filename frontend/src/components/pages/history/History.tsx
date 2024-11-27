@@ -76,47 +76,52 @@ export const History:React.FC = () => {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '2rem 0' }}>
         <h1 style={{ fontWeight: 900, fontSize: '5rem' }}>Seu histórico de viagens, {customerName}</h1>
       </div>
+
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', margin: '2rem 2rem' }}>
-        <p><strong>Id do usuário: </strong>{customerId}</p>
-        <Link to={'/trip'} style={{ color: '#FFF', fontWeight: 900 }}>Fazer uma nova viagem</Link>
-      </div>
-       <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
-
+        <p style={{margin:"0 1rem"}}><strong>Id do usuário: </strong>{customerId}</p>
         <Select onChange={(e)=> handleDriverFilter(e)} drivers={drivers}/>
+        <Link to={'/trip'} style={{ color: '#FFF', fontWeight: 900 , margin:"0 0"}}>Fazer uma nova viagem</Link>
+      </div>
 
-      </div>
-      <div style={{ width: '90%', overflowX: 'auto', display: 'flex', justifyContent: 'center', marginTop: '2rem', alignItems:'center' }}>
-        {history && history.rides.length > 0 ? (
-          <table style={{ width: '80%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th>Data e Hora</th>
-                <th>Motorista</th>
-                <th>Origem</th>
-                <th>Destino</th>
-                <th>Distância (km)</th>
-                <th>Tempo</th>
-                <th>Valor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.rides.map((ride: Ride) => (
-                <tr key={ride.id}>
-                  <td>{new Date(ride.date).toLocaleString()}</td>
-                  <td>{ride.driver.name}</td>
-                  <td>{ride.origin}</td>
-                  <td>{ride.destination}</td>
-                  <td>{(ride.distance/1000).toFixed(2).replace('.',',')}</td>
-                  <td>{ride.duration}</td>
-                  <td>R$ {ride.value.toFixed(2).replace('.',',')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>Nenhuma viagem encontrada.</p>
-        )}
-      </div>
+      <div style={{ width: "100%", margin: "2rem auto" }}>
+            {history && history.rides.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" , alignItems:"self-start", justifyContent:'center'}}>
+                    {history.rides.map((ride: Ride) => (
+                        <div
+                            key={ride.id}
+                            style={{
+                                padding: "1rem"
+                            }}
+                        >
+                            <p>
+                                <strong>Data e Hora:</strong> {new Date(ride.date).toLocaleString()}
+                            </p>
+                            <p>
+                                <strong>Motorista:</strong> {ride.driver.name}
+                            </p>
+                            <p>
+                                <strong>Origem:</strong> {ride.origin}
+                            </p>
+                            <p>
+                                <strong>Destino:</strong> {ride.destination}
+                            </p>
+                            <p>
+                                <strong>Distância (km):</strong>{" "}
+                                {(ride.distance / 1000).toFixed(2).replace(".", ",")}
+                            </p>
+                            <p>
+                                <strong>Tempo:</strong> {ride.duration}
+                            </p>
+                            <p>
+                                <strong>Valor:</strong> R$ {ride.value.toFixed(2).replace(".", ",")}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p style={{ textAlign: "center" }}>Nenhuma viagem encontrada.</p>
+            )}
+        </div>
     </>
   );
 }

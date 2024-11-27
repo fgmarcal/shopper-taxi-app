@@ -85,7 +85,7 @@ export const Trip:React.FC = () => {
       <h1 style={{fontWeight:900, fontSize:'8rem'}}>{`Para onde vamos hoje, ${userName}?`}</h1>
     </div>
     <div style={{display:'flex',flexDirection:'row',  alignItems:'center', justifyContent:'flex-end', margin:'1rem 2rem'}}>
-      <Link to={'/history'}>Quero ver meu histórico de viagens!</Link>
+      <Link to={'/history'} style={{ color: '#FFF', fontWeight: 900 }}>Quero ver meu histórico de viagens!</Link>
     </div>
 
     <div style={{display:'flex', alignItems:'center', justifyContent:'center', margin:'1rem auto'}}>

@@ -2,14 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Map, useMap } from "@vis.gl/react-google-maps";
 import { mapContainer } from "./style";
 import { mapRender } from "./types";
+import { defaultCenter } from "./defaultLocation";
 
-
-
-const defaultCenter = {
-    //Localização de São Paulo
-    lat:-23.59148176827035,
-    lng:-46.67912328149004
-}
 
 export const GoogleMap: React.FC<mapRender> = (ride) => {
     const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
