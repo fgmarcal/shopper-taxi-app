@@ -13,6 +13,8 @@ RUN npm install
 # Copia o restante do projeto
 COPY . .
 
+RUN npx prisma generate
+
 # Build do TypeScript
 RUN npm run build
 

@@ -1,3 +1,7 @@
+INSERT INTO Customer (name, email)
+VALUES
+('Teste', 'teste@email.com')
+
 -- Inserção dos registros na tabela Driver
 INSERT INTO Driver (name, description, vehicle, value, min_km)
 VALUES
@@ -13,6 +17,6 @@ VALUES
 
 INSERT INTO DriverReview (rating, comment, driverId, customerId)
 VALUES
-(2, 'Motorista simpático, mas errou o caminho 3 vezes. O carro cheira a donuts.', 1, 'uuid-da-customer-1'),
-(4, 'Que viagem incrível! O carro é um show à parte e o motorista, apesar de ter uma cara de poucos amigos, foi super gente boa. Recomendo!', 2, 'uuid-da-customer-2'),
-(5, 'Serviço impecável! O motorista é a própria definição de classe e o carro é simplesmente magnífico. Uma experiência digna de um agente secreto.', 3, 'uuid-da-customer-3');
+(2, 'Motorista simpático, mas errou o caminho 3 vezes. O carro cheira a donuts.', 1, 'teste@email.com'),
+(4, 'Que viagem incrível! O carro é um show à parte e o motorista, apesar de ter uma cara de poucos amigos, foi super gente boa. Recomendo!', 2, 'teste@email.com'),
+(5, 'Serviço impecável! O motorista é a própria definição de classe e o carro é simplesmente magnífico. Uma experiência digna de um agente secreto.', 3, 'teste@email.com');
