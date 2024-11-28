@@ -1,5 +1,5 @@
 export const endpoints = {
-    host:process.env.BASE_URL,
+    host:'http://0.0.0.0:8080/',
 }
 
 export const customerRoutes = {

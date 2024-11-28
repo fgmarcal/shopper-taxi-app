@@ -8,7 +8,7 @@ import { reviewRoutes } from "./routes/driverReview/ReviewRoutes";
 import { errorHandler } from "../application/middleware/ErrorHandler";
 import { rideRoutes } from "./routes/ride/RideRoutes";
 
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:80'];
+const allowedOrigins = ['http://0.0.0.0:5173', 'http://0.0.0.0:80', 'http://localhost'];
 
 const options: cors.CorsOptions = {
     origin: allowedOrigins

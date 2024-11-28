@@ -1,5 +1,8 @@
 # Base image para Node.js
-FROM node:18-alpine
+FROM node:20-alpine
+
+# Instala o SQLite
+RUN apk add --no-cache sqlite
 
 # Diretório de trabalho
 WORKDIR /app
@@ -13,6 +16,8 @@ RUN npm install
 # Copia o restante do projeto
 COPY . .
 
+RUN npm install -g prisma
+
 RUN npx prisma generate
 
 # Build do TypeScript
@@ -25,4 +30,4 @@ ENV GOOGLE_API_KEY=${GOOGLE_API_KEY}
 EXPOSE 8080
 
 # Comando para rodar o backend
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]
